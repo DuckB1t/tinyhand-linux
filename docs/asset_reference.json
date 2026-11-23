@@ -1,0 +1,650 @@
+{
+  "hand_astro": {
+    "file": "hand_astro.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      350,
+      136,
+      697,
+      1465
+    ],
+    "visible_frac": 0.293,
+    "centroid": [
+      518.9,
+      654.1
+    ]
+  },
+  "hand_black": {
+    "file": "hand_black.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      358,
+      172,
+      699,
+      1469
+    ],
+    "visible_frac": 0.281,
+    "centroid": [
+      522.1,
+      682.1
+    ]
+  },
+  "hand_blue": {
+    "file": "hand_blue.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      352,
+      178,
+      701,
+      1465
+    ],
+    "visible_frac": 0.286,
+    "centroid": [
+      518.8,
+      688.2
+    ]
+  },
+  "hand_cactus": {
+    "file": "hand_cactus.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      364,
+      174,
+      667,
+      1505
+    ],
+    "visible_frac": 0.256,
+    "centroid": [
+      515.7,
+      716.7
+    ]
+  },
+  "hand_choco": {
+    "file": "hand_choco.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      368,
+      178,
+      705,
+      1507
+    ],
+    "visible_frac": 0.285,
+    "centroid": [
+      528.2,
+      687.7
+    ]
+  },
+  "hand_chrome": {
+    "file": "hand_chrome.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      352,
+      146,
+      707,
+      1495
+    ],
+    "visible_frac": 0.304,
+    "centroid": [
+      521.7,
+      674.0
+    ]
+  },
+  "hand_cloud": {
+    "file": "hand_cloud.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      344,
+      200,
+      705,
+      1497
+    ],
+    "visible_frac": 0.298,
+    "centroid": [
+      517.6,
+      703.6
+    ]
+  },
+  "hand_cookie": {
+    "file": "hand_cookie.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      322,
+      150,
+      691,
+      1461
+    ],
+    "visible_frac": 0.308,
+    "centroid": [
+      501.7,
+      631.3
+    ]
+  },
+  "hand_coral": {
+    "file": "hand_coral.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      274,
+      172,
+      765,
+      1383
+    ],
+    "visible_frac": 0.378,
+    "centroid": [
+      511.9,
+      613.8
+    ]
+  },
+  "hand_fuzzy": {
+    "file": "hand_fuzzy.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      344,
+      144,
+      705,
+      1487
+    ],
+    "visible_frac": 0.308,
+    "centroid": [
+      521.1,
+      665.5
+    ]
+  },
+  "hand_glass": {
+    "file": "hand_glass.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      358,
+      196,
+      697,
+      1443
+    ],
+    "visible_frac": 0.269,
+    "centroid": [
+      523.8,
+      693.3
+    ]
+  },
+  "hand_glove": {
+    "file": "hand_glove.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      346,
+      146,
+      701,
+      1463
+    ],
+    "visible_frac": 0.297,
+    "centroid": [
+      518.5,
+      657.6
+    ]
+  },
+  "hand_grass": {
+    "file": "hand_grass.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      348,
+      160,
+      707,
+      1489
+    ],
+    "visible_frac": 0.303,
+    "centroid": [
+      521.4,
+      695.8
+    ]
+  },
+  "hand_holo": {
+    "file": "hand_holo.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      370,
+      150,
+      695,
+      1465
+    ],
+    "visible_frac": 0.272,
+    "centroid": [
+      524.3,
+      673.5
+    ]
+  },
+  "hand_jelly": {
+    "file": "hand_jelly.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      364,
+      184,
+      695,
+      1473
+    ],
+    "visible_frac": 0.271,
+    "centroid": [
+      523.4,
+      698.0
+    ]
+  },
+  "hand_knit": {
+    "file": "hand_knit.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      366,
+      176,
+      699,
+      1453
+    ],
+    "visible_frac": 0.27,
+    "centroid": [
+      526.7,
+      663.7
+    ]
+  },
+  "hand_lava": {
+    "file": "hand_lava.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      352,
+      158,
+      705,
+      1467
+    ],
+    "visible_frac": 0.294,
+    "centroid": [
+      520.2,
+      662.6
+    ]
+  },
+  "hand_lavender": {
+    "file": "hand_lavender.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      342,
+      120,
+      715,
+      1457
+    ],
+    "visible_frac": 0.317,
+    "centroid": [
+      521.7,
+      643.6
+    ]
+  },
+  "hand_leaf": {
+    "file": "hand_leaf.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      322,
+      150,
+      679,
+      1461
+    ],
+    "visible_frac": 0.298,
+    "centroid": [
+      499.2,
+      649.4
+    ]
+  },
+  "hand_lemon": {
+    "file": "hand_lemon.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      350,
+      140,
+      701,
+      1491
+    ],
+    "visible_frac": 0.301,
+    "centroid": [
+      519.6,
+      668.2
+    ]
+  },
+  "hand_lowpoly": {
+    "file": "hand_lowpoly.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      348,
+      142,
+      701,
+      1463
+    ],
+    "visible_frac": 0.296,
+    "centroid": [
+      518.7,
+      657.2
+    ]
+  },
+  "hand_marble": {
+    "file": "hand_marble.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      350,
+      144,
+      701,
+      1481
+    ],
+    "visible_frac": 0.298,
+    "centroid": [
+      520.6,
+      669.0
+    ]
+  },
+  "hand_mech": {
+    "file": "hand_mech.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      304,
+      150,
+      689,
+      1461
+    ],
+    "visible_frac": 0.321,
+    "centroid": [
+      496.2,
+      647.2
+    ]
+  },
+  "hand_mint": {
+    "file": "hand_mint.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      344,
+      144,
+      703,
+      1463
+    ],
+    "visible_frac": 0.301,
+    "centroid": [
+      518.7,
+      663.3
+    ]
+  },
+  "hand_monster": {
+    "file": "hand_monster.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      340,
+      176,
+      729,
+      1497
+    ],
+    "visible_frac": 0.327,
+    "centroid": [
+      525.4,
+      690.6
+    ]
+  },
+  "hand_neon": {
+    "file": "hand_neon.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      320,
+      150,
+      689,
+      1461
+    ],
+    "visible_frac": 0.308,
+    "centroid": [
+      500.5,
+      644.9
+    ]
+  },
+  "hand_pastel": {
+    "file": "hand_pastel.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      346,
+      142,
+      701,
+      1463
+    ],
+    "visible_frac": 0.298,
+    "centroid": [
+      519.4,
+      656.8
+    ]
+  },
+  "hand_pink": {
+    "file": "hand_pink.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      358,
+      174,
+      695,
+      1473
+    ],
+    "visible_frac": 0.278,
+    "centroid": [
+      520.5,
+      691.2
+    ]
+  },
+  "hand_pixel": {
+    "file": "hand_pixel.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      344,
+      196,
+      737,
+      1471
+    ],
+    "visible_frac": 0.319,
+    "centroid": [
+      544.1,
+      667.2
+    ]
+  },
+  "hand_plush": {
+    "file": "hand_plush.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      286,
+      144,
+      775,
+      1535
+    ],
+    "visible_frac": 0.432,
+    "centroid": [
+      525.6,
+      619.9
+    ]
+  },
+  "hand_robot": {
+    "file": "hand_robot.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      238,
+      202,
+      759,
+      1535
+    ],
+    "visible_frac": 0.442,
+    "centroid": [
+      501.9,
+      689.3
+    ]
+  },
+  "hand_skeleton": {
+    "file": "hand_skeleton.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      4,
+      62,
+      671,
+      1533
+    ],
+    "visible_frac": 0.624,
+    "centroid": [
+      517.1,
+      674.5
+    ]
+  },
+  "hand_space": {
+    "file": "hand_space.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      354,
+      140,
+      699,
+      1465
+    ],
+    "visible_frac": 0.291,
+    "centroid": [
+      523.6,
+      662.4
+    ]
+  },
+  "hand_terrazzo": {
+    "file": "hand_terrazzo.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      356,
+      194,
+      705,
+      1499
+    ],
+    "visible_frac": 0.29,
+    "centroid": [
+      522.6,
+      705.4
+    ]
+  },
+  "hand_water": {
+    "file": "hand_water.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      352,
+      166,
+      693,
+      1465
+    ],
+    "visible_frac": 0.282,
+    "centroid": [
+      517.9,
+      673.6
+    ]
+  },
+  "hand_wood": {
+    "file": "hand_wood.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "visible_bbox": [
+      346,
+      140,
+      699,
+      1473
+    ],
+    "visible_frac": 0.299,
+    "centroid": [
+      518.7,
+      660.1
+    ]
+  }
+}

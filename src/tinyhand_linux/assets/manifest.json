@@ -1,0 +1,542 @@
+{
+  "astro": {
+    "aspect": 0.6127,
+    "file": "hands/hand_astro.png",
+    "hand_max_x": 696,
+    "hand_min_x": 349,
+    "hand_top": 137,
+    "rod_end": 1463,
+    "rod_x": 523.96,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 472.12,
+    "wrist": 704
+  },
+  "black": {
+    "aspect": 0.6207,
+    "file": "hands/hand_black.png",
+    "hand_max_x": 699,
+    "hand_min_x": 358,
+    "hand_top": 172,
+    "rod_end": 1468,
+    "rod_x": 528.22,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 465.25,
+    "wrist": 722
+  },
+  "blue": {
+    "aspect": 0.6399,
+    "file": "hands/hand_blue.png",
+    "hand_max_x": 700,
+    "hand_min_x": 351,
+    "hand_top": 178,
+    "rod_end": 1464,
+    "rod_x": 525.45,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 471.12,
+    "wrist": 724
+  },
+  "cactus": {
+    "aspect": 0.5642,
+    "file": "hands/hand_cactus.png",
+    "hand_max_x": 665,
+    "hand_min_x": 363,
+    "hand_top": 177,
+    "rod_end": 1505,
+    "rod_x": 524.82,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 479.94,
+    "wrist": 713
+  },
+  "choco": {
+    "aspect": 0.6172,
+    "file": "hands/hand_choco.png",
+    "hand_max_x": 703,
+    "hand_min_x": 367,
+    "hand_top": 177,
+    "rod_end": 1505,
+    "rod_x": 532.21,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 480.69,
+    "wrist": 722
+  },
+  "chrome": {
+    "aspect": 0.6401,
+    "file": "hands/hand_chrome.png",
+    "hand_max_x": 705,
+    "hand_min_x": 352,
+    "hand_top": 145,
+    "rod_end": 1494,
+    "rod_x": 525.91,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 468.75,
+    "wrist": 697
+  },
+  "cloud": {
+    "aspect": 0.6491,
+    "file": "hands/hand_cloud.png",
+    "hand_max_x": 702,
+    "hand_min_x": 346,
+    "hand_top": 200,
+    "rod_end": 1496,
+    "rod_x": 523.94,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 467.12,
+    "wrist": 749
+  },
+  "cookie": {
+    "aspect": 0.6589,
+    "file": "hands/hand_cookie.png",
+    "hand_max_x": 690,
+    "hand_min_x": 322,
+    "hand_top": 150,
+    "rod_end": 1461,
+    "rod_x": 511.5,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 423.38,
+    "wrist": 709
+  },
+  "coral": {
+    "aspect": 0.8255,
+    "file": "hands/hand_coral.png",
+    "hand_max_x": 765,
+    "hand_min_x": 274,
+    "hand_top": 172,
+    "rod_end": 1382,
+    "rod_x": 510.16,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 423.06,
+    "wrist": 767
+  },
+  "fuzzy": {
+    "aspect": 0.6516,
+    "file": "hands/hand_fuzzy.png",
+    "hand_max_x": 704,
+    "hand_min_x": 344,
+    "hand_top": 144,
+    "rod_end": 1486,
+    "rod_x": 524.9,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 472.74,
+    "wrist": 697
+  },
+  "glass": {
+    "aspect": 0.6384,
+    "file": "hands/hand_glass.png",
+    "hand_max_x": 696,
+    "hand_min_x": 358,
+    "hand_top": 196,
+    "rod_end": 1434,
+    "rod_x": 531.34,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 471.62,
+    "wrist": 726
+  },
+  "glove": {
+    "aspect": 0.6473,
+    "file": "hands/hand_glove.png",
+    "hand_max_x": 701,
+    "hand_min_x": 346,
+    "hand_top": 145,
+    "rod_end": 1463,
+    "rod_x": 525.78,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 472.5,
+    "wrist": 694
+  },
+  "grass": {
+    "aspect": 0.6276,
+    "file": "hands/hand_grass.png",
+    "hand_max_x": 705,
+    "hand_min_x": 347,
+    "hand_top": 159,
+    "rod_end": 1464,
+    "rod_x": 525.32,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 471.78,
+    "wrist": 730
+  },
+  "holo": {
+    "aspect": 0.6059,
+    "file": "hands/hand_holo.png",
+    "hand_max_x": 694,
+    "hand_min_x": 369,
+    "hand_top": 151,
+    "rod_end": 1464,
+    "rod_x": 526.63,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 479.94,
+    "wrist": 688
+  },
+  "jelly": {
+    "aspect": 0.6264,
+    "file": "hands/hand_jelly.png",
+    "hand_max_x": 695,
+    "hand_min_x": 364,
+    "hand_top": 184,
+    "rod_end": 1473,
+    "rod_x": 526.15,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 477.81,
+    "wrist": 713
+  },
+  "knit": {
+    "aspect": 0.616,
+    "file": "hands/hand_knit.png",
+    "hand_max_x": 698,
+    "hand_min_x": 367,
+    "hand_top": 175,
+    "rod_end": 1453,
+    "rod_x": 525.96,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 483.88,
+    "wrist": 713
+  },
+  "lava": {
+    "aspect": 0.6336,
+    "file": "hands/hand_lava.png",
+    "hand_max_x": 697,
+    "hand_min_x": 359,
+    "hand_top": 161,
+    "rod_end": 1466,
+    "rod_x": 524.99,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 470.25,
+    "wrist": 695
+  },
+  "lavender": {
+    "aspect": 0.6561,
+    "file": "hands/hand_lavender.png",
+    "hand_max_x": 713,
+    "hand_min_x": 342,
+    "hand_top": 119,
+    "rod_end": 1457,
+    "rod_x": 525.61,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 475.0,
+    "wrist": 685
+  },
+  "leaf": {
+    "aspect": 0.6393,
+    "file": "hands/hand_leaf.png",
+    "hand_max_x": 678,
+    "hand_min_x": 321,
+    "hand_top": 150,
+    "rod_end": 1461,
+    "rod_x": 511.5,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 415.62,
+    "wrist": 709
+  },
+  "lemon": {
+    "aspect": 0.6388,
+    "file": "hands/hand_lemon.png",
+    "hand_max_x": 700,
+    "hand_min_x": 349,
+    "hand_top": 140,
+    "rod_end": 1465,
+    "rod_x": 524.98,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 473.12,
+    "wrist": 690
+  },
+  "lowpoly": {
+    "aspect": 0.6395,
+    "file": "hands/hand_lowpoly.png",
+    "hand_max_x": 701,
+    "hand_min_x": 349,
+    "hand_top": 143,
+    "rod_end": 1463,
+    "rod_x": 524.27,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 468.44,
+    "wrist": 694
+  },
+  "marble": {
+    "aspect": 0.644,
+    "file": "hands/hand_marble.png",
+    "hand_max_x": 700,
+    "hand_min_x": 350,
+    "hand_top": 143,
+    "rod_end": 1481,
+    "rod_x": 526.6,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 469.19,
+    "wrist": 687
+  },
+  "mech": {
+    "aspect": 0.6875,
+    "file": "hands/hand_mech.png",
+    "hand_max_x": 688,
+    "hand_min_x": 304,
+    "hand_top": 150,
+    "rod_end": 1461,
+    "rod_x": 511.5,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 405.44,
+    "wrist": 709
+  },
+  "mint": {
+    "aspect": 0.6491,
+    "file": "hands/hand_mint.png",
+    "hand_max_x": 701,
+    "hand_min_x": 345,
+    "hand_top": 144,
+    "rod_end": 1462,
+    "rod_x": 524.43,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 472.56,
+    "wrist": 693
+  },
+  "monster": {
+    "aspect": 0.6526,
+    "file": "hands/hand_monster.png",
+    "hand_max_x": 727,
+    "hand_min_x": 341,
+    "hand_top": 177,
+    "rod_end": 1496,
+    "rod_x": 525.88,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 482.0,
+    "wrist": 769
+  },
+  "neon": {
+    "aspect": 0.6583,
+    "file": "hands/hand_neon.png",
+    "hand_max_x": 687,
+    "hand_min_x": 320,
+    "hand_top": 150,
+    "rod_end": 1461,
+    "rod_x": 511.5,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 435.25,
+    "wrist": 708
+  },
+  "pastel": {
+    "aspect": 0.6431,
+    "file": "hands/hand_pastel.png",
+    "hand_max_x": 700,
+    "hand_min_x": 346,
+    "hand_top": 143,
+    "rod_end": 1462,
+    "rod_x": 525.56,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 470.0,
+    "wrist": 694
+  },
+  "pink": {
+    "aspect": 0.622,
+    "file": "hands/hand_pink.png",
+    "hand_max_x": 695,
+    "hand_min_x": 357,
+    "hand_top": 173,
+    "rod_end": 1472,
+    "rod_x": 526.02,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 473.12,
+    "wrist": 717
+  },
+  "pixel": {
+    "aspect": 0.6695,
+    "file": "hands/hand_pixel.png",
+    "hand_max_x": 737,
+    "hand_min_x": 345,
+    "hand_top": 195,
+    "rod_end": 1469,
+    "rod_x": 541.15,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 501.07,
+    "wrist": 781
+  },
+  "plush": {
+    "aspect": 0.7862,
+    "file": "hands/hand_plush.png",
+    "hand_max_x": 774,
+    "hand_min_x": 286,
+    "hand_top": 143,
+    "rod_end": 1535,
+    "rod_x": 514.0,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 451.88,
+    "wrist": 764
+  },
+  "robot": {
+    "aspect": 0.9029,
+    "file": "hands/hand_robot.png",
+    "hand_max_x": 758,
+    "hand_min_x": 238,
+    "hand_top": 202,
+    "rod_end": 1535,
+    "rod_x": 512.0,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 406.81,
+    "wrist": 778
+  },
+  "skeleton": {
+    "aspect": 0.6089,
+    "file": "hands/hand_skeleton.png",
+    "hand_max_x": 671,
+    "hand_min_x": 370,
+    "hand_top": 169,
+    "rod_end": 1449,
+    "rod_x": 523.95,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 470.25,
+    "wrist": 664
+  },
+  "space": {
+    "aspect": 0.6264,
+    "file": "hands/hand_space.png",
+    "hand_max_x": 699,
+    "hand_min_x": 353,
+    "hand_top": 139,
+    "rod_end": 1465,
+    "rod_x": 525.33,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 469.69,
+    "wrist": 692
+  },
+  "terrazzo": {
+    "aspect": 0.647,
+    "file": "hands/hand_terrazzo.png",
+    "hand_max_x": 705,
+    "hand_min_x": 356,
+    "hand_top": 194,
+    "rod_end": 1498,
+    "rod_x": 525.13,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 472.94,
+    "wrist": 734
+  },
+  "water": {
+    "aspect": 0.6379,
+    "file": "hands/hand_water.png",
+    "hand_max_x": 691,
+    "hand_min_x": 352,
+    "hand_top": 166,
+    "rod_end": 1464,
+    "rod_x": 525.93,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 467.31,
+    "wrist": 698
+  },
+  "wood": {
+    "aspect": 0.636,
+    "file": "hands/hand_wood.png",
+    "hand_max_x": 698,
+    "hand_min_x": 346,
+    "hand_top": 140,
+    "rod_end": 1472,
+    "rod_x": 525.54,
+    "size": [
+      1024,
+      1536
+    ],
+    "tip_x": 471.44,
+    "wrist": 694
+  }
+}

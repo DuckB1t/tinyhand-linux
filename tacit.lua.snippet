@@ -1,0 +1,13 @@
+-- Optional Tacit (Lua) keybinds for TinyHand Linux.
+-- Add to ~/.config/hypr/custom/keybinds.lua only if you want them.
+-- This repository never edits your config automatically.
+
+local ctl = os.getenv("HOME") .. "/.local/share/tinyhand-linux/venv/bin/tinyhandctl"
+hl.bind("CTRL + ALT + H", hl.dsp.exec_cmd(ctl .. " toggle"), { description = "TinyHand: toggle pointer" })
+hl.bind("CTRL + ALT + X", hl.dsp.exec_cmd(ctl .. " clear"), { description = "TinyHand: clear drawing" })
+hl.bind("CTRL + ALT + E", hl.dsp.exec_cmd(ctl .. " style next"), { description = "TinyHand: cycle style" })
+hl.bind("CTRL + ALT + M", hl.dsp.exec_cmd(ctl .. " sound toggle"), { description = "TinyHand: toggle tap sound" })
+hl.bind("CTRL + ALT + S", hl.dsp.exec_cmd(ctl .. " settings"), { description = "TinyHand: settings" })
+
+-- Optional autostart goes in ~/.config/hypr/custom/execs.lua:
+-- hl.exec_cmd(os.getenv("HOME") .. "/.local/share/tinyhand-linux/venv/bin/tinyhand --hidden")

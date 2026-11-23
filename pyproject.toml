@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tinyhand-linux"
+version = "1.1.0"
+description = "TinyHand — a hand-on-a-stick pointer for Wayland"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "TinyHand Linux contributors" }]
+dependencies = [
+  "pywayland>=0.4.17",
+  "pycairo>=1.26",
+  "evdev>=1.7",
+  "Pillow>=10",
+  "numpy>=1.24",
+]
+
+[project.scripts]
+tinyhand = "tinyhand_linux.cli:main"
+tinyhandctl = "tinyhand_linux.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+tinyhand_linux = [
+  "assets/manifest.json",
+  "assets/hands/*.png",
+  "assets/sounds/*.wav",
+  "assets/icons/*",
+  "protocol/*.py",
+]

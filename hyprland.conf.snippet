@@ -1,0 +1,12 @@
+# Optional Hyprland keybinds for TinyHand Linux.
+# Copy these lines into your hyprland.conf (or the equivalent user override file).
+# This repository never edits your config automatically.
+
+bind = CTRL ALT, H, exec, ~/.local/share/tinyhand-linux/venv/bin/tinyhandctl toggle
+bind = CTRL ALT, X, exec, ~/.local/share/tinyhand-linux/venv/bin/tinyhandctl clear
+bind = CTRL ALT, E, exec, ~/.local/share/tinyhand-linux/venv/bin/tinyhandctl style next
+bind = CTRL ALT, M, exec, ~/.local/share/tinyhand-linux/venv/bin/tinyhandctl sound toggle
+bind = CTRL ALT, S, exec, ~/.local/share/tinyhand-linux/venv/bin/tinyhandctl settings
+
+# Optional autostart (only add if you want it):
+# exec-once = ~/.local/share/tinyhand-linux/venv/bin/tinyhand --hidden
