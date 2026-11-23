@@ -214,10 +214,13 @@ class InputManager:
             return
         name = BUTTON_NAMES.get(code)
         if name and value in (0, 1):
-            now = time.time()
-            if now - self.last_button.get(code, 0) < 0.06:
-                return
-            self.last_button[code] = now
+            if value == 1:
+                # Debounce duplicate press events from multiple mice, but never
+                # drop the matching release or drawing can get stuck on.
+                now = time.time()
+                if now - self.last_button.get(code, 0) < 0.06:
+                    return
+                self.last_button[code] = now
             self.on_button(name, bool(value))
             return
         if value != 1:

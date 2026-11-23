@@ -23,7 +23,18 @@ def data_dir() -> Path:
 
 
 def runtime_dir() -> Path:
-    return Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")).expanduser()
+    configured = os.environ.get("XDG_RUNTIME_DIR")
+    if configured:
+        path = Path(configured).expanduser()
+    else:
+        # Never put an unauthenticated control socket directly in /tmp.
+        path = Path("/tmp") / f"tinyhand-{os.getuid()}"
+    try:
+        path.mkdir(parents=True, exist_ok=True, mode=0o700)
+        os.chmod(path, 0o700)
+    except OSError:
+        pass
+    return path
 
 
 def control_socket() -> Path:

@@ -21,8 +21,9 @@ def send_command(command: str) -> int:
     if not path.exists():
         print(f"tinyhandctl: TinyHand is not running ({path})", file=sys.stderr)
         return 1
+    client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     try:
-        client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        client.settimeout(2.0)
         client.connect(str(path))
         client.sendall(command.encode())
         data = b""
@@ -31,10 +32,11 @@ def send_command(command: str) -> int:
             if not chunk:
                 break
             data += chunk
-        client.close()
     except OSError as exc:
         print(f"tinyhandctl: {exc}", file=sys.stderr)
         return 1
+    finally:
+        client.close()
     try:
         result = json.loads(data)
     except ValueError:
@@ -48,6 +50,18 @@ def send_command(command: str) -> int:
     else:
         print(result)
     return 0
+
+
+def apply_startup_flags(app, hidden: bool = False, settings: bool = False) -> None:
+    """Apply launch-time flags before the event loop starts."""
+    if hidden:
+        # Autostart should be truly invisible, including the first-run card.
+        app.active = False
+        app.welcome_open = False
+        app.ui.welcome_open = False
+    if settings:
+        app.settings_open = True
+        app.ui.settings_open = True
 
 
 def main() -> int:
@@ -69,21 +83,14 @@ def main() -> int:
         return 1
 
     hidden = "--hidden" in args
-    if "--settings" in args:
-        from .app import TinyHandApp
+    settings = "--settings" in args
+    from .app import TinyHandApp
 
-        app = TinyHandApp()
-        # A running instance owns the control socket; ask it to open settings.
-        if control_socket().exists():
-            return send_command("settings")
-        app.settings_open = True
-        app.ui.settings_open = True
-    else:
-        from .app import TinyHandApp
-
-        app = TinyHandApp()
-        if hidden:
-            app.active = False
+    app = TinyHandApp()
+    # A running instance owns the control socket; ask it to open settings.
+    if settings and control_socket().exists():
+        return send_command("settings")
+    apply_startup_flags(app, hidden=hidden, settings=settings)
     try:
         return app.run()
     except KeyboardInterrupt:

@@ -85,6 +85,7 @@ class UI:
         self.picker_scroll = 0.0
         self.hint_parts: list[tuple[str, str]] = []
         self.ink_open = False
+        self.toolbar_visible = False
         self.settings_open = False
         self.welcome_open = False
         self.settings_section = "general"
@@ -105,16 +106,51 @@ class UI:
     def add(self, widget_id: str, kind: str, rect, label="", value=None, data=None) -> Widget:
         widget = Widget(widget_id, kind, tuple(rect), label, value, data or {})
         self.widgets.append(widget)
-        if kind not in ("divider", "text", "card", "keycap", "icon"):
-            self.input_rects.append(
-                (int(rect[0]), int(rect[1]), int(max(1, rect[2])), int(max(1, rect[3])))
-            )
+        # The container rectangles (toolbar/settings/welcome/picker) are
+        # registered explicitly by the layout methods. Individual controls must
+        # not expand the Wayland input region when they scroll off-screen.
         return widget
+
+    def _visible(self, widget: Widget) -> bool:
+        if widget.data.get("area") == "page" and self.clip_rect:
+            cx, cy, cw, ch = self.clip_rect
+            return not (
+                widget.x + widget.w < cx
+                or widget.x > cx + cw
+                or widget.y + widget.h < cy
+                or widget.y > cy + ch
+            )
+        if widget.data.get("picker") and self.picker_open:
+            px, py, pw, ph = self.picker_rect
+            return not (
+                widget.x + widget.w < px
+                or widget.x > px + pw
+                or widget.y + widget.h < py
+                or widget.y > py + ph
+            )
+        return True
+
+    def _point_in_container(self, x: float, y: float, widget: Widget) -> bool:
+        # Evdev sees raw input even when the Wayland input region excludes a
+        # point, so hit-testing must reject coordinates outside the visible
+        # scroll/picker containers as well as off-screen widgets.
+        if widget.data.get("area") == "page" and self.clip_rect:
+            cx, cy, cw, ch = self.clip_rect
+            return cx <= x <= cx + cw and cy <= y <= cy + ch
+        if widget.data.get("picker") and self.picker_open:
+            px, py, pw, ph = self.picker_rect
+            return px <= x <= px + pw and py <= y <= py + ph
+        return True
 
     def hit(self, x: float, y: float) -> Widget | None:
         for widget in reversed(self.widgets):
             wx, wy, ww, wh = widget.rect
-            if wx <= x <= wx + ww and wy <= y <= wy + wh:
+            if (
+                wx <= x <= wx + ww
+                and wy <= y <= wy + wh
+                and self._visible(widget)
+                and self._point_in_container(x, y, widget)
+            ):
                 return widget
         return None
 
@@ -144,7 +180,8 @@ class UI:
         styles = list(self.prefs.pinned_styles)
         if self.prefs.pointer_style not in styles:
             styles.append(self.prefs.pointer_style)
-        count = len(styles) + 4
+        show_ink = bool(self.prefs.show_ink_button)
+        count = len(styles) + (4 if show_ink else 3)
         panel_w = 20 + count * 40 + (count - 1) * 6
         panel_h = 56
         x = (width - panel_w) / 2
@@ -167,15 +204,16 @@ class UI:
             cx += 46
         self.add("divider", "divider", (cx, y + 16, 1, 24))
         cx += 7
-        self.add(
-            "ink",
-            "ink_button",
-            (cx, y + 8, 40, 40),
-            "Ink colour",
-            self.prefs.ink_choice,
-            {"open": self.ink_open},
-        )
-        cx += 46
+        if show_ink:
+            self.add(
+                "ink",
+                "ink_button",
+                (cx, y + 8, 40, 40),
+                "Ink colour",
+                self.prefs.ink_choice,
+                {"open": self.ink_open},
+            )
+            cx += 46
         self.add(
             "sound",
             "icon_button",
@@ -351,7 +389,7 @@ class UI:
         self.add("startup_title", "text", (x + 4, y, w, 18), "Startup", data={"area": "page", "secondary": True})
         self.add("startup_card", "card", (x, y + 22, w, 106), data={"area": "page"})
         self._row(add, x, y + 30, w, "Open TinyHand when you log in", "Writes a standard XDG autostart entry (off by default).", 52, lambda bx, by, bw, bh: self._switch("autostart", bool(getattr(self, "autostart", False)), bx, by, bw, bh))
-        self._row(add, x, y + 82, w, "Show a welcome card on first launch", "Explains the overlay once.", 52, lambda bx, by, bw, bh: self._switch("welcome_shown", self.prefs.welcome_shown, bx, by, bw, bh))
+        self._row(add, x, y + 82, w, "Show a welcome card on first launch", "Explains the overlay once.", 52, lambda bx, by, bw, bh: self._switch("welcome_shown", not self.prefs.welcome_shown, bx, by, bw, bh))
         return y + 150
 
     def _pointers_page(self, add, x, y, w):
@@ -515,6 +553,11 @@ class UI:
     # ----------------------------------------------------------------- paint
 
     def paint(self, ctx: cairo.Context, app, width: int, height: int) -> None:
+        if self.settings_open:
+            self._paint_settings_frame(ctx)
+        elif app.active and self.toolbar_visible and self.toolbar_rect[2] > 0:
+            self._paint_toolbar_frame(ctx)
+
         for widget in self.widgets:
             if widget.data.get("area") == "page" or widget.data.get("picker") or widget.data.get("welcome"):
                 continue
@@ -536,6 +579,9 @@ class UI:
                 self._paint_scrollbar(ctx, app)
 
         if self.picker_open and self.settings_open:
+            px, py, pw, ph = self.picker_rect
+            if pw > 0:
+                panel(ctx, px, py, pw, ph, radius=12, alpha=0.94)
             for widget in self.widgets:
                 if widget.data.get("picker"):
                     self._paint_widget(ctx, widget, app, dark=False)
@@ -551,6 +597,28 @@ class UI:
             for widget in self.widgets:
                 if widget.data.get("welcome") or widget.id.startswith("welcome_"):
                     self._paint_widget(ctx, widget, app, dark=False)
+
+    def _paint_toolbar_frame(self, ctx) -> None:
+        panel(ctx, *self.toolbar_rect, radius=16, alpha=0.72)
+        if self.ink_open and self.tray_rect[2] > 0:
+            panel(ctx, *self.tray_rect, radius=14, alpha=0.72)
+        if self.hint_parts and self.hint_rect[2] > 0:
+            panel(ctx, *self.hint_rect, radius=12, alpha=0.62)
+
+    def _paint_settings_frame(self, ctx) -> None:
+        sx, sy, sw, sh = self.settings_rect
+        if sw <= 0:
+            return
+        panel(ctx, sx, sy, sw, sh, radius=18, alpha=0.82)
+        # Slightly darker sidebar, with a hairline divider.
+        rounded_rect(ctx, sx, sy, 210, sh, 18)
+        ctx.set_source_rgba(0.015, 0.017, 0.022, 0.42)
+        ctx.fill()
+        ctx.set_source_rgba(1, 1, 1, 0.09)
+        ctx.set_line_width(1)
+        ctx.move_to(sx + 210.5, sy + 12)
+        ctx.line_to(sx + 210.5, sy + sh - 12)
+        ctx.stroke()
 
     def _paint_scrollbar(self, ctx, app) -> None:
         sx, sy, sw, sh = self.settings_rect

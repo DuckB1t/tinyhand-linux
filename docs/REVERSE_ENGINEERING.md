@@ -104,7 +104,7 @@ Source studied: `https://github.com/nilbuild/tinyhand.git`, commit `da98f98`
 | Borderless always-on-top NSWindow | `zwlr_layer_shell_v1` overlay layer |
 | CGEventTap + event swallowing | Evdev buttons + Hyprland IPC; no global suppression for ordinary clients |
 | CGS cursor hiding | Not available to normal Wayland clients; real cursor remains visible |
-| Carbon global hotkeys | Optional WM keybinds calling `tinyhandctl` |
+| Carbon global hotkeys | evdev global hotkeys, with optional WM keybinds calling `tinyhandctl` |
 | UserDefaults | `$XDG_CONFIG_HOME/tinyhand-linux/config.json` |
 | Application Support `state.json` | `$XDG_RUNTIME_DIR/tinyhand-linux-state.json` |
 | Sparkle updater | Intentionally omitted for a source-built Linux package |

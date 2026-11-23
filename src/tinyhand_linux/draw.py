@@ -9,12 +9,35 @@ from pathlib import Path
 from typing import Iterable
 
 import cairo
+import numpy as np
 from PIL import Image
 
 from .paths import asset_dir
 from .prefs import hex_rgb
 
 MANIFEST: dict[str, dict] = json.loads((asset_dir() / "manifest.json").read_text())
+
+
+def _cairo_bytes(image: Image.Image) -> bytearray:
+    """Convert PIL RGBA pixels to cairo ARGB32 (native little-endian BGRA).
+
+    Cairo expects premultiplied alpha; straight RGBA bytes render with swapped
+    red/blue channels and dark fringes on translucent edges.
+    """
+    rgba = np.asarray(image.convert("RGBA"), dtype=np.uint8)
+    alpha = rgba[:, :, 3:4].astype(np.uint16)
+    rgb = rgba[:, :, :3].astype(np.uint16)
+    premultiplied = ((rgb * alpha + 127) // 255).astype(np.uint8)
+    bgra = np.concatenate(
+        (
+            premultiplied[:, :, 2:3],
+            premultiplied[:, :, 1:2],
+            premultiplied[:, :, 0:1],
+            rgba[:, :, 3:4],
+        ),
+        axis=2,
+    )
+    return bytearray(bgra.tobytes())
 
 
 # ---------------------------------------------------------------------- paths
@@ -306,8 +329,6 @@ class HandRenderer:
             return None
         image = Image.open(path).convert("RGBA")
         # Recompute the hand crop from alpha (the manifest stores the pose metrics).
-        import numpy as np
-
         alpha = np.array(image.getchannel("A"))
         hand = alpha[geom.hand_top : geom.wrist + 1]
         hx = np.where((hand > 128).any(axis=0))[0]
@@ -319,7 +340,7 @@ class HandRenderer:
         top = max(0, int(cy - side / 2))
         box = (left, top, min(image.width, int(left + side)), min(image.height, int(top + side)))
         crop = image.crop(box).resize((size, size), Image.Resampling.LANCZOS)
-        data = bytearray(crop.tobytes())
+        data = _cairo_bytes(crop)
         surface = cairo.ImageSurface.create_for_data(
             data, cairo.FORMAT_ARGB32, size, size, size * 4
         )
@@ -337,7 +358,7 @@ class HandRenderer:
         if not path.exists():
             return None
         image = Image.open(path).convert("RGBA")
-        data = bytearray(image.tobytes())
+        data = _cairo_bytes(image)
         surface = cairo.ImageSurface.create_for_data(
             data, cairo.FORMAT_ARGB32, image.width, image.height, image.width * 4
         )

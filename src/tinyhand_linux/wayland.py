@@ -20,6 +20,7 @@ class Buffer:
     buffer: object
     surface: cairo.ImageSurface
     mmap: mmap.mmap
+    pool: object
     busy: bool = False
 
 
@@ -114,6 +115,14 @@ class LayerCanvas:
                 item.buffer.destroy()
             except Exception:
                 pass
+            try:
+                item.surface.finish()
+            except Exception:
+                pass
+            try:
+                item.mmap.close()
+            except Exception:
+                pass
         self.buffers.clear()
 
     def _create_buffers(self) -> None:
@@ -121,26 +130,28 @@ class LayerCanvas:
             return
         stride = self.width * 4
         size = stride * self.height
-        memfd = os.memfd_create("tinyhand", 0)
-        os.ftruncate(memfd, size * 2)
-        pool = self.shm.create_pool(memfd, size * 2)
-        for index in range(2):
-            offset = index * size
-            memory = mmap.mmap(memfd, size, offset=offset)
+        # Use a separate memfd/pool per buffer. Sharing one pool with a
+        # stride-sized offset fails on resolutions whose frame size is not a
+        # multiple of the mmap page size (e.g. 1366x768).
+        for _index in range(2):
+            memfd = os.memfd_create("tinyhand", 0)
+            os.ftruncate(memfd, size)
+            pool = self.shm.create_pool(memfd, size)
+            memory = mmap.mmap(memfd, size, offset=0)
             surface = cairo.ImageSurface.create_for_data(
                 memory, cairo.FORMAT_ARGB32, self.width, self.height, stride
             )
             buffer = pool.create_buffer(
-                offset,
+                0,
                 self.width,
                 self.height,
                 stride,
                 WlShm.format.argb8888,
             )
-            item = Buffer(buffer, surface, memory)
+            item = Buffer(buffer, surface, memory, pool)
             buffer.dispatcher["release"] = lambda *_args, b=item: setattr(b, "busy", False)
             self.buffers.append(item)
-        os.close(memfd)
+            os.close(memfd)
 
     def set_interactive(self, enabled: bool, rects: list[tuple[int, int, int, int]] | None = None) -> None:
         """Restrict input to UI rectangles; an empty region passes clicks through."""

@@ -82,13 +82,14 @@ tinyhand://toggle                # URL handler, same command set
 | Hold Option (or configured interact key) | Real interaction with the app underneath |
 | Double-tap Shift | Toggle click-through |
 | Esc | Exit / turn pointer off |
-| `Ctrl+Alt+H` * | Toggle pointer (if you add the keybind) |
-| `Ctrl+Alt+X` * | Clear drawing |
-| `Ctrl+Alt+E` * | Cycle style |
-| `Ctrl+Alt+M` * | Toggle sound |
-| `Ctrl+Alt+S` * | Open settings |
+| `Ctrl+Alt+H` | Toggle pointer |
+| `Ctrl+Alt+X` | Clear drawing |
+| `Ctrl+Alt+E` | Cycle style |
+| `Ctrl+Alt+M` | Toggle sound |
+| `Ctrl+Alt+S` | Open settings |
 
-\* Optional; see the snippet files.
+The last five are read globally through evdev when the app can access
+`/dev/input`. The optional snippet files provide a WM-level fallback.
 
 ## Documentation
 
@@ -102,7 +103,7 @@ tinyhand://toggle                # URL handler, same command set
 
 ```bash
 make deps        # create .venv and install the package in editable mode
-make test        # 16 offline unit tests (prefs, assets, Cairo drawing, UI hit-testing)
+make test        # 27 offline unit tests (prefs, assets, Cairo drawing, UI hit-testing)
 make run         # start from the source tree
 ```
 

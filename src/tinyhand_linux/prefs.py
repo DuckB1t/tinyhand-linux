@@ -7,6 +7,7 @@ The ids, titles, colours and defaults mirror TinyHand 1.1.0's
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -104,6 +105,53 @@ INTERACT_KEYS = ("option", "command", "control", "off")
 FADE_CHOICES = (3, 6, 10, 0)
 
 
+def _as_bool(value: Any, default: bool) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, int) and value in (0, 1):
+        return bool(value)
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in ("1", "true", "yes", "on"):
+            return True
+        if lowered in ("0", "false", "no", "off"):
+            return False
+    return default
+
+
+def _as_float(value: Any, low: float, high: float, default: float) -> float:
+    if isinstance(value, bool):
+        return default
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return default
+    if not math.isfinite(number):
+        return default
+    return min(high, max(low, number))
+
+
+def _as_choice(value: Any, choices: tuple[Any, ...], default: Any, integer: bool = False) -> Any:
+    if isinstance(value, bool):
+        return default
+    candidate: Any = value
+    if integer:
+        try:
+            candidate = int(value)
+        except (TypeError, ValueError):
+            return default
+    elif not isinstance(value, str):
+        return default
+    return candidate if candidate in choices else default
+
+
+def _as_shortcut(value: Any, default: str) -> str:
+    if not isinstance(value, str):
+        return default
+    candidate = " ".join(value.split())
+    return candidate if 3 <= len(candidate) <= 64 else default
+
+
 def hex_rgb(value: str) -> tuple[float, float, float]:
     value = value.lstrip("#")
     return tuple(int(value[i : i + 2], 16) / 255 for i in (0, 2, 4))  # type: ignore[return-value]
@@ -141,21 +189,51 @@ class Settings:
     @classmethod
     def load(cls, path: Path | None = None) -> "Settings":
         path = path or config_file()
-        data: dict[str, Any] = {}
         try:
-            if path.exists():
-                data = json.loads(path.read_text())
+            raw = json.loads(path.read_text()) if path.exists() else {}
         except (OSError, ValueError):
-            data = {}
+            raw = {}
+        data = raw if isinstance(raw, dict) else {}
+        defaults = cls()
         known = {f for f in cls.__dataclass_fields__ if not f.startswith("_")}
-        clean = {k: v for k, v in data.items() if k in known}
-        if "pointer_style" in clean:
-            clean["pointer_style"] = migrate_style(str(clean["pointer_style"]))
-        clean["pinned_styles"] = [
-            migrate_style(s)
-            for s in clean.get("pinned_styles", list(DEFAULT_PINNED))
-            if migrate_style(s) in STYLE_BY_ID
-        ][:8] or list(DEFAULT_PINNED)
+        clean: dict[str, Any] = {}
+
+        for key, value in data.items():
+            if key not in known:
+                continue
+            default = getattr(defaults, key)
+            if isinstance(default, bool):
+                clean[key] = _as_bool(value, default)
+            elif key == "pointer_size":
+                clean[key] = _as_float(value, 0.08, 0.20, default)
+            elif key == "fade_seconds":
+                clean[key] = _as_choice(value, FADE_CHOICES, default, integer=True)
+            elif key in ("toggle_shortcut", "clear_shortcut"):
+                clean[key] = _as_shortcut(value, default)
+            elif key == "interact_key":
+                clean[key] = _as_choice(value, INTERACT_KEYS, default)
+            elif key == "ink_choice":
+                clean[key] = _as_choice(value, tuple(item[0] for item in INK_CHOICES), default)
+            elif key == "tap_sound":
+                clean[key] = _as_choice(value, tuple(item[0] for item in SOUNDS), default)
+            elif key == "pointer_style":
+                migrated = migrate_style(str(value))
+                if migrated in STYLE_BY_ID:
+                    clean[key] = migrated
+            elif key == "pinned_styles":
+                pinned: list[str] = []
+                for item in value if isinstance(value, list) else []:
+                    migrated = migrate_style(str(item))
+                    if migrated in STYLE_BY_ID and migrated not in pinned:
+                        pinned.append(migrated)
+                clean[key] = pinned[:8]
+
+        clean.setdefault(
+            "pinned_styles",
+            [migrate_style(item) for item in DEFAULT_PINNED if migrate_style(item) in STYLE_BY_ID],
+        )
+        if not clean["pinned_styles"]:
+            clean["pinned_styles"] = list(DEFAULT_PINNED)
         obj = cls(**clean)
         obj._path = path
         return obj

@@ -121,6 +121,7 @@ class TinyHandApp:
             path.unlink()
         server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         server.bind(str(path))
+        os.chmod(path, 0o600)
         server.listen(8)
         self.control_server = server
         self.selector.register(server.fileno(), selectors.EVENT_READ, ("control", server))
@@ -274,7 +275,10 @@ class TinyHandApp:
         widget = self.ui.hit(x, y) if (self.ui.widgets and (self.settings_open or self.welcome_open or self.ui.toolbar_visible)) else None
         if widget and pressed:
             # UI clicks are captured by the input region; handle them once.
-            self.ui_action(widget.id, widget.value)
+            if widget.kind == "slider":
+                self._set_slider(widget, x)
+            else:
+                self.ui_action(widget.id, widget.value)
             return
         if not self.active or not pressed and button != "left":
             return
@@ -334,9 +338,9 @@ class TinyHandApp:
             elif self.active:
                 self.deactivate()
             return
-        if key == "h" and modifiers == {"ctrl", "alt"}:
+        if self._matches_shortcut(key, modifiers, self.prefs.toggle_shortcut):
             self.toggle()
-        elif key == "x" and modifiers == {"ctrl", "alt"}:
+        elif self._matches_shortcut(key, modifiers, self.prefs.clear_shortcut):
             self.clear()
         elif key == "e" and modifiers == {"ctrl", "alt"}:
             self.cycle_style()
@@ -344,6 +348,8 @@ class TinyHandApp:
             self.sound_on = not self.sound_on
             self.prefs.sound_hands = self.sound_on
             self.notify(f"sound: {'on' if self.sound_on else 'off'}")
+        elif key == "s" and modifiers == {"ctrl", "alt"}:
+            self.open_settings()
 
     def _interaction_modifiers(self) -> None:
         key = self.prefs.interact_key
@@ -367,6 +373,27 @@ class TinyHandApp:
     def _clean_shift_taps(self) -> bool:
         taps = self.shift_taps[-2:]
         return len(taps) == 2 and 0 < taps[1] - taps[0] < 0.35
+
+    @staticmethod
+    def _matches_shortcut(key: str, modifiers: set[str], shortcut: str) -> bool:
+        aliases = {
+            "ctrl": "ctrl", "control": "ctrl", "alt": "alt", "option": "alt",
+            "shift": "shift", "super": "super", "cmd": "super",
+            "command": "super", "meta": "super",
+        }
+        expected: set[str] = set()
+        main: str | None = None
+        for part in shortcut.split("+"):
+            part = part.strip().lower()
+            if not part:
+                continue
+            if part in aliases:
+                expected.add(aliases[part])
+            else:
+                main = part
+        if main is None:
+            return False
+        return key.lower() == main and set(modifiers) == expected
 
     def _record_shortcut(self, key: str, modifiers: set[str]) -> None:
         if key == "Escape":
@@ -468,15 +495,22 @@ class TinyHandApp:
         return self.status()
 
     def handle_control(self, server: socket.socket) -> None:
+        conn: socket.socket | None = None
         try:
             conn, _ = server.accept()
             conn.settimeout(1.5)
             data = conn.recv(4096).decode(errors="replace").strip()
             result = self.command(data)
             conn.sendall((json.dumps(result) + "\n").encode())
-            conn.close()
-        except (OSError, ValueError):
-            pass
+        except Exception as exc:
+            # A bad client must never take down the event loop.
+            self.log(f"control error: {type(exc).__name__}: {exc}")
+        finally:
+            if conn is not None:
+                try:
+                    conn.close()
+                except OSError:
+                    pass
 
     def status(self) -> dict[str, Any]:
         return {
@@ -521,6 +555,14 @@ class TinyHandApp:
         style_id = self.prefs.cycle_style(step)
         self.prefs.save()
         self.notify(f"style: {STYLE_BY_ID[style_id].title}")
+
+    def _set_slider(self, widget, x: float) -> None:
+        if widget.w <= 0:
+            return
+        ratio = min(1.0, max(0.0, (x - widget.x) / widget.w))
+        self.prefs.pointer_size = round(0.08 + ratio * 0.12, 3)
+        self.prefs.save()
+        self.notify(f"pointer size: {self.prefs.pointer_size:.2f}")
 
     def open_settings(self, section: str | None = None) -> None:
         self.settings_open = True
@@ -585,12 +627,16 @@ class TinyHandApp:
                 self.ui.recording = field_id
             else:
                 self.ui.active_field = field_id
-        elif widget_id in ("double_shift", "show_shadow", "show_toolbar", "show_ink_button", "sound_laser", "autostart", "welcome_shown"):
+        elif widget_id in ("double_shift", "show_shadow", "show_toolbar", "show_ink_button", "sound_laser", "autostart"):
             attr = widget_id
             current = self.ui.autostart if attr == "autostart" else getattr(self.prefs, attr)
             setattr(self.prefs if attr != "autostart" else self.ui, attr, not current)
             if attr == "autostart":
                 self._set_autostart(self.ui.autostart)
+        elif widget_id == "welcome_shown":
+            # The switch label is “show the card on first launch”; the stored
+            # preference records that it has already been shown.
+            self.prefs.welcome_shown = not self.prefs.welcome_shown
         elif widget_id == "interact_key":
             index = INTERACT_KEYS.index(self.prefs.interact_key) if self.prefs.interact_key in INTERACT_KEYS else 0
             self.prefs.interact_key = INTERACT_KEYS[(index + 1) % len(INTERACT_KEYS)]
@@ -612,6 +658,10 @@ class TinyHandApp:
         elif widget_id.startswith("pinned:"):
             style_id = widget_id.split(":", 1)[1]
             self.prefs.pointer_style = style_id
+        elif widget_id == "picker_make":
+            self.ui.picker_open = False
+            self.ui.settings_section = "make_hand"
+            self.ui.scroll_y = 0
         elif widget_id == "make_hand":
             self.ui.settings_section = "make_hand"
             self.ui.scroll_y = 0
@@ -721,7 +771,7 @@ class TinyHandApp:
             self.notice = ""
         self.ui.settings_open = self.settings_open
         self.ui.welcome_open = self.welcome_open
-        self.ui.ink_open = self.ui.ink_open and toolbar
+        self.ui.ink_open = self.ui.ink_open and toolbar and self.prefs.show_ink_button
         self.ui.layout(self, self.canvas.width, self.canvas.height)
 
         rects = tuple(self.ui.input_rects) if (self.settings_open or self.welcome_open or toolbar) else ()

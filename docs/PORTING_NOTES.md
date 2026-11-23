@@ -10,8 +10,8 @@ behaviour and visuals while replacing platform plumbing.
 ## Layer-shell design
 
 One fullscreen `zwlr_layer_shell_v1` surface is created on the `overlay` layer
-with all four anchors and an exclusive zone of `-1`. It uses a double-buffered
-`wl_shm` pool and Cairo for drawing. Its input region is empty while the hand
+with all four anchors and an exclusive zone of `-1`. It uses two `wl_shm`
+buffers in private pools and Cairo for drawing. Its input region is empty while the hand
 is just pointing, so clicks reach apps underneath. When the toolbar, settings,
 or welcome card is visible, the input region is changed to those rectangles so
 UI clicks are captured.
@@ -22,8 +22,10 @@ UI clicks are captured.
   `hyprctl -j cursorpos` fallback.
 - Buttons and keyboard: evdev. Multiple mice are supported with a short
   debounce window.
-- Global hotkeys cannot be registered by an ordinary Wayland client; the
-  optional keybind snippets call `tinyhandctl` via your WM.
+- Global hotkeys are read via evdev when `/dev/input` is readable, so the
+  built-in `Ctrl+Alt+H/X/E/M/S` shortcuts work without WM configuration. If
+  evdev access is unavailable, the optional keybind snippets call
+  `tinyhandctl` through the WM instead.
 
 ## Deliberate differences
 
