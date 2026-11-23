@@ -1,31 +1,34 @@
+CARGO ?= cargo
 PYTHON ?= python3
 VENV ?= .venv
-PIP := $(VENV)/bin/pip
 PY := $(VENV)/bin/python
-SRC := src
+MANIFEST := rust/Cargo.toml
 
-.PHONY: venv deps test build install run clean
+.PHONY: deps test test-python build run install clean venv
+
+deps:
+	$(CARGO) fetch --manifest-path $(MANIFEST)
+
+test:
+	$(CARGO) test --manifest-path $(MANIFEST)
 
 venv:
 	$(PYTHON) -m venv $(VENV)
+	$(VENV)/bin/pip install -q -e .
 
-deps: venv
-	$(PIP) install -q --upgrade pip
-	$(PIP) install -q -e .
-
-test:
+test-python: venv
 	$(PY) -m unittest discover -s tests -t . -v
 
-build: deps
-	$(PIP) install -q build
-	$(PY) -m build
+build:
+	$(CARGO) build --release --manifest-path $(MANIFEST)
+
+run:
+	$(CARGO) run --release --manifest-path $(MANIFEST) --bin tinyhand
 
 install:
 	./install.sh
 
-run: deps
-	PYTHONPATH=$(SRC) $(PY) -m tinyhand_linux
-
 clean:
+	$(CARGO) clean --manifest-path $(MANIFEST)
 	rm -rf build dist *.egg-info $(VENV)
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +

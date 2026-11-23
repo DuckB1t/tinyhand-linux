@@ -40,12 +40,18 @@ UI clicks are captured.
 
 ## Verification performed
 
-- `py_compile` / imports under the installed venv.
-- Live Hyprland layer creation at 1920×1080.
-- Control socket commands: `status`, `on`, `off`, `toggle`, `clear`, `demo`,
-  `style`, `sound`, `settings`, `section`, `toolbar`, `quit`.
-- Screenshot capture with `grim` for welcome, toolbar, and every settings tab.
-- Pixel-difference checks confirming overlay and ink changes.
+- `cargo build --release` and `cargo test` for the Rust implementation.
+- The 27-test offline Python oracle suite still passes; it is kept only as a
+  behavioural reference, not as a runtime dependency.
+- Live Rust daemon on Hyprland/Wayland with a full 1920×1080 layer surface.
+- Control socket and URL commands: `status`, `on`, `off`, `toggle`, `clear`,
+  `demo`, `style`, `sound`, `settings`, `section`, `toolbar`, `welcome`, `quit`,
+  plus `tinyhand://style/coral?x=1`-style URLs.
+- Python-compatible control output, including `active=True style=lavender
+  sound=True` rather than JSON booleans or quoted strings.
+- Screenshot capture with `grim` and visual comparison against the Python
+  reference for the toolbar/hand overlay.
+- No changes made to `~/.config/hypr/**`; no autostart or keybinds installed.
 
 ## Known rough edges
 

@@ -1,24 +1,17 @@
-<!--
-title: TinyHand Linux — native Wayland/Hyprland presentation pointer
-description: TinyHand Linux is a free, open-source Python/Cairo presentation pointer and screen-drawing overlay for Wayland, Hyprland and wlroots. It uses the original TinyHand art and sounds.
-keywords: tinyhand linux, tinyhand wayland, hyprland pointer, wayland presentation tool, cairo overlay, pywayland layer shell, screen drawing, presentation pointer, open source
--->
-
 <div align="center">
 
 # TinyHand Linux
 
-### The playful presentation pointer, reborn for Wayland.
+### The playful presentation pointer, now native on Wayland.
 
-**A native Python/Cairo port of [TinyHand](https://github.com/nilbuild/tinyhand) for Hyprland, sway, river, and other wlroots compositors.**
+**A fast, small Rust/Cairo port of [TinyHand](https://github.com/nilbuild/tinyhand) for Hyprland, sway, river, and other wlroots compositors.**
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Rust](https://img.shields.io/badge/Rust-1.80%2B-DEA584?logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Wayland-00D1B2?logo=linux)](https://wayland.freedesktop.org/)
 [![WM](https://img.shields.io/badge/WM-Hyprland%20%2F%20wlroots-7B68EE)](https://hyprland.org/)
-[![Tests](https://img.shields.io/badge/tests-27%20passing-brightgreen)](tests)
 
-`Python` · `Cairo` · `pywayland` · `evdev` · `Hyprland IPC` · `layer-shell`
+`Rust` · `Cairo` · `native Wayland` · `evdev` · `Hyprland IPC` · `layer-shell`
 
 </div>
 
@@ -26,26 +19,27 @@ keywords: tinyhand linux, tinyhand wayland, hyprland pointer, wayland presentati
 
 ## ✨ What it is
 
-TinyHand replaces your cursor with a toy hand on a stick while you present or screen-share. This Linux edition keeps the original's spirit — 36 hand styles, tap sounds, ink, toolbar, settings, and pixel-matched art — but rebuilds the macOS/AppKit internals for **Wayland**.
+TinyHand replaces your cursor with a toy hand on a stick while you present or screen-share. This Linux edition keeps the original's spirit — 36 hand styles, tap sounds, ink, toolbar, settings, and the same measured geometry — but runs on a native Rust stack with no Python, Pillow, NumPy, pip, or venv at runtime.
 
-It was developed and verified on a real **Hyprland 0.57.2 / Tacit / Wayland** session at **1920×1080** on `eDP-1`.
+It was developed and verified on a real **Hyprland / Tacit / Wayland** session at **1920×1080** on `eDP-1`.
 
 > 🛡️ **No surprise system changes.** The installer never edits `~/.config/hypr/**`, never enables autostart, and never binds keys. Optional snippets are provided for you to copy only if you want them.
 
 ---
 
-## 🚀 Why it feels good
+## 🚀 Why the Rust port
 
 | | Feature | What you get |
 |---|---|---|
 | 🖐️ | **Original art, not approximations** | All 36 upstream `hand_*.png` files and 15 `tap_*.wav` files are bundled and used directly. |
-| 🎯 | **Pixel-minded rendering** | Per-asset alpha measurements, grip lean, stick length, press animation, shadow, and laser-dot style. |
+| 🦀 | **Native Rust runtime** | Smaller and faster than the Python implementation, with no interpreter startup or virtualenv. |
+| 🎯 | **Pixel-minded rendering** | The same grip lean, stick length, press animation, shadow, and laser-dot behavior as the reference port. |
 | 🖍️ | **Screen ink** | Smooth freehand strokes, Ctrl-drag arrowheads, colour choices, and timed fading. |
 | 🧩 | **37 pointer styles** | 36 hands + laser dot, with a pinned toolbar and style picker. |
-| 🪟 | **Real Wayland overlay** | Fullscreen `zwlr_layer_shell_v1` surface with a click-through input region. |
+| 🪟 | **Real Wayland overlay** | Fullscreen `zwlr_layer_shell_v1` surface with `exclusive_zone(-1)` and a click-through input region. |
 | ⌨️ | **Global shortcuts** | Built-in `Ctrl+Alt+H/X/E/M/S` through evdev, with optional WM fallback snippets. |
 | 🔊 | **Tactile sound** | The original thocks, clicks, tocks, quacks, pews, and more via `paplay`. |
-| 🧠 | **Persistent state** | Preferences, `state.json`, `tinyhand://` URL commands, and a Unix control socket. |
+| 🧠 | **Persistent state** | Preferences, state file, `tinyhand://` URL commands, and a Unix control socket with Python-compatible output. |
 
 ---
 
@@ -57,18 +51,20 @@ cd tinyhand-linux
 ./install.sh
 ```
 
-The installer creates an isolated venv at:
+The installer builds the release binaries and installs:
 
 ```text
-~/.local/share/tinyhand-linux/venv
+~/.local/bin/tinyhand
+~/.local/bin/tinyhandctl
+~/.local/share/tinyhand-linux/assets/
 ```
 
 It also installs desktop entries and registers the `tinyhand://` URL scheme. It does **not** touch Hyprland config, autostart, or keybinds.
 
 ### Requirements
 
+- Rust and Cargo to build from source.
 - A Wayland compositor with `zwlr_layer_shell_v1` — Hyprland, sway, river, labwc, wayfire, etc.
-- Python 3.10+
 - Read access to `/dev/input/event*` for mouse buttons — usually membership in the `input` group.
 - `paplay` for sounds — PulseAudio/PipeWire. Sounds are skipped quietly if unavailable.
 
@@ -77,7 +73,7 @@ It also installs desktop entries and registers the `tinyhand://` URL scheme. It 
 ## ▶️ Run
 
 ```bash
-~/.local/share/tinyhand-linux/venv/bin/tinyhand
+tinyhand
 ```
 
 Optional launcher flags:
@@ -90,8 +86,6 @@ tinyhand --settings   # open settings
 ---
 
 ## 🎛️ Control it
-
-`tinyhandctl` lives in the same venv:
 
 ```bash
 tinyhandctl status
@@ -117,6 +111,12 @@ tinyhand://toggle
 tinyhand://style/coral
 tinyhand://sound/off
 tinyhand://clear
+```
+
+`tinyhandctl status` keeps the original Python output format, for example:
+
+```text
+active=True  style=lavender  sound=True  strokes=0  cursor=[0, 0]  settings=False  toolbar=False  reveal=0.0  show_toolbar=True  widgets=0  version=1.1.0
 ```
 
 ---
@@ -158,27 +158,34 @@ The last five are read globally through evdev when `/dev/input` is accessible. I
 ## 🧑‍💻 Development
 
 ```bash
-make deps        # create .venv and install the package editable
-make test        # 27 offline tests: prefs, assets, Cairo drawing, UI hit-testing
-make run         # start from the source tree
-make build       # produce wheel + sdist
+make build        # cargo build --release
+make test         # Rust unit tests
+make test-python  # 27 offline reference-suite checks
+make run          # run the Rust app from the source tree
+make install      # build and install into ~/.local
 ```
 
 Repository map:
 
 ```text
+rust/src/
+  app.rs          application state machine, event loop, commands
+  ui.rs           toolbar / settings / welcome panels and hit-testing
+  draw.rs         Cairo primitives, hand renderer, ink renderer
+  wayland.rs      layer-shell surface, SHM buffers, input region
+  input.rs        evdev mouse/keyboard + Hyprland IPC
+  prefs.rs        preferences, 37 styles, ink and sound catalogues
+  paths.rs        XDG paths
+  cli.rs          tinyhand / tinyhandctl command line
 src/tinyhand_linux/
-  app.py          application state machine, event loop, commands
-  ui.py           toolbar / settings / welcome panels and hit-testing
-  draw.py         Cairo primitives, hand renderer, ink renderer
-  wayland.py      pywayland layer-shell surface and SHM buffers
-  input.py        evdev mouse/keyboard + Hyprland IPC
-  prefs.py        preferences, 37 styles, ink and sound catalogues
-  paths.py        XDG paths
-  assets/         upstream hands, sounds, icon, geometry manifest
-  protocol/       generated pywayland bindings
-tests/            offline regression checks
+  Python reference implementation kept as the parity oracle
+tests/
+  offline regression suite for the reference implementation
+src/tinyhand_linux/assets/
+  upstream hands, sounds, icon, geometry manifest
 ```
+
+The Python implementation is kept for comparison and regression checks only; the installed app does not depend on it.
 
 ---
 
@@ -193,7 +200,7 @@ This project exists because of **TinyHand** by **Kamran Ahmed** ([@nilbuild](htt
 - Upstream licence: **MIT © 2026 Kamran Ahmed**
 - Reverse-engineered commit: [`da98f98`](https://github.com/nilbuild/tinyhand/tree/da98f98) — v1.1.0
 
-The original 36 hand renders, 15 tap sounds, menubar icon, UI copy, layout metrics, and behaviour were preserved and reused under the upstream MIT licence. This port is not affiliated with or endorsed by the original author.
+The original 36 hand renders, 15 tap sounds, menubar icon, UI copy, layout metrics, and behavior were preserved and reused under the upstream MIT licence. This port is not affiliated with or endorsed by the original author.
 
 ### Tools used to build the port
 
@@ -201,13 +208,11 @@ The original 36 hand renders, 15 tap sounds, menubar icon, UI copy, layout metri
 |---|---|
 | **REA** | Reverse-engineering workflow and target inspection. Apple asset-catalog/plist inspection requires a macOS host, so that limitation is documented honestly in the RE notes. |
 | **Upstream Swift source** | Authoritative source for lifecycle, preferences, shortcuts, toolbar geometry, settings sections, and URL commands. |
-| **Python 3.10+** | Clean-room Linux implementation. |
-| **pywayland** | Wayland client, `wl_shm`, and generated `zwlr_layer_shell_v1` bindings. |
-| **pycairo** | All panels, controls, ink, thumbnails, and hand compositing. |
-| **Pillow + NumPy** | Asset measurement, alpha crops, pixel checks, and RGBA → premultiplied BGRA conversion. |
-| **evdev** | Global mouse buttons, keyboard, wheel, and shortcut capture. |
+| **Rust** | Native implementation with `wayland-client`, `wayland-protocols-wlr`, `cairo-rs`, `evdev`, `image`, `serde`, `serde_json`, `nix`, `memmap2`, `libc`, and `wait-timeout`. |
+| **Python reference port** | Clean-room reference oracle for behavioral and pixel parity; not used at runtime. |
+| **Pillow + NumPy** | Development-time asset measurement, alpha crops, and pixel checks. |
 | **Hyprland IPC / `.socket2.sock`** | Live pointer position tracking. |
-| **Pillow / `grim`** | Screenshot and pixel-difference verification on the live session. |
+| **`grim`** | Screenshot verification on the live session. |
 | **paplay / PipeWire** | Playing the original tap sounds. |
 | **GitHub CLI** | Publishing and verifying this repository. |
 
@@ -222,7 +227,7 @@ Full technical documentation is in English above. These summaries cover the esse
 <details>
 <summary><strong>Español</strong></summary>
 
-**TinyHand Linux** es un port nativo de TinyHand para Wayland, Hyprland y otros compositores wlroots. Reemplaza el cursor con una mano toy durante presentaciones y permite dibujar en pantalla.
+**TinyHand Linux** es un port nativo en Rust de TinyHand para Wayland, Hyprland y otros compositores wlroots. Reemplaza el cursor con una mano toy durante presentaciones y permite dibujar en pantalla.
 
 ```bash
 git clone https://github.com/DuckB1t/tinyhand-linux.git
@@ -232,14 +237,14 @@ cd tinyhand-linux
 
 Incluye las 36 manos y los 15 sonidos originales, tinta, barra de herramientas, ajustes y atajos `Ctrl+Alt+H/X/E/M/S`. El instalador **no** modifica la configuración de Hyprland, añade autostart ni atajos.
 
-Créditos: TinyHand © 2026 Kamran Ahmed, MIT. Puerto realizado con Python, Cairo, pywayland, evdev, Pillow, NumPy y REA.
+Créditos: TinyHand © 2026 Kamran Ahmed, MIT. Puerto realizado con Rust, Cairo, wayland-client, evdev y REA.
 
 </details>
 
 <details>
 <summary><strong>Français</strong></summary>
 
-**TinyHand Linux** est une version native pour Wayland/Hyprland de TinyHand. Elle remplace le curseur par une main jouet pendant vos présentations et permet de dessiner à l'écran.
+**TinyHand Linux** est une version native en Rust pour Wayland/Hyprland de TinyHand. Elle remplace le curseur par une main jouet pendant vos présentations et permet de dessiner à l'écran.
 
 ```bash
 git clone https://github.com/DuckB1t/tinyhand-linux.git
@@ -249,14 +254,14 @@ cd tinyhand-linux
 
 Le projet conserve les 36 mains et les 15 sons d'origine, l'encre, la barre d'outils, les réglages et les raccourcis `Ctrl+Alt+H/X/E/M/S`. L'installateur ne touche **jamais** à la configuration Hyprland, au démarrage automatique ni aux raccourcis.
 
-Crédits : TinyHand © 2026 Kamran Ahmed, MIT. Port réalisé avec Python, Cairo, pywayland, evdev, Pillow, NumPy et REA.
+Crédits : TinyHand © 2026 Kamran Ahmed, MIT. Port réalisé avec Rust, Cairo, wayland-client, evdev et REA.
 
 </details>
 
 <details>
 <summary><strong>Deutsch</strong></summary>
 
-**TinyHand Linux** ist eine native Wayland/Hyprland-Portierung von TinyHand. Der Zeiger wird während Präsentationen durch eine Spielzeughand ersetzt; außerdem kannst du auf dem Bildschirm zeichnen.
+**TinyHand Linux** ist eine native Rust-Portierung von TinyHand für Wayland/Hyprland. Der Zeiger wird während Präsentationen durch eine Spielzeughand ersetzt; außerdem kannst du auf dem Bildschirm zeichnen.
 
 ```bash
 git clone https://github.com/DuckB1t/tinyhand-linux.git
@@ -266,14 +271,14 @@ cd tinyhand-linux
 
 Enthalten sind alle 36 Original-Hände, 15 Sounds, Freihand-Tinte, Symbolleiste, Einstellungen und die Shortcuts `Ctrl+Alt+H/X/E/M/S`. Das Installationsskript ändert **keine** Hyprland-Konfiguration, aktiviert keinen Autostart und legt keine Tastenkürzel an.
 
-Credits: TinyHand © 2026 Kamran Ahmed, MIT. Portiert mit Python, Cairo, pywayland, evdev, Pillow, NumPy und REA.
+Credits: TinyHand © 2026 Kamran Ahmed, MIT. Portiert mit Rust, Cairo, wayland-client, evdev und REA.
 
 </details>
 
 <details>
 <summary><strong>हिन्दी</strong></summary>
 
-**TinyHand Linux**, TinyHand का एक देशी Wayland/Hyprland पोर्ट है। यह प्रेजेंटेशन के दौरान कर्सर को एक खिलौना हाथ से बदल देता है और स्क्रीन पर ड्रॉ करने की सुविधा देता है।
+**TinyHand Linux**, TinyHand का एक देशी Rust पोर्ट है जो Wayland/Hyprland के लिए है। यह प्रेजेंटेशन के दौरान कर्सर को एक खिलौना हाथ से बदल देता है और स्क्रीन पर ड्रॉ करने की सुविधा देता है।
 
 ```bash
 git clone https://github.com/DuckB1t/tinyhand-linux.git
@@ -283,14 +288,14 @@ cd tinyhand-linux
 
 इसमें मूल 36 हाथ, 15 ध्वनियाँ, इंक, टूलबार, सेटिंग्स और `Ctrl+Alt+H/X/E/M/S` शॉर्टकट शामिल हैं। इंस्टॉलर **Hyprland कॉन्फ़िग, ऑटोस्टार्ट या कीबाइंड्स को बिल्कुल नहीं बदलता**।
 
-क्रेडिट: TinyHand © 2026 Kamran Ahmed, MIT। पोर्ट Python, Cairo, pywayland, evdev, Pillow, NumPy और REA से बनाया गया।
+क्रेडिट: TinyHand © 2026 Kamran Ahmed, MIT। पोर्ट Rust, Cairo, wayland-client, evdev और REA से बनाया गया।
 
 </details>
 
 <details>
 <summary><strong>中文（简体）</strong></summary>
 
-**TinyHand Linux** 是 TinyHand 的原生 Wayland/Hyprland 移植版。演示时它会用卡通手替代鼠标指针，并支持在屏幕上自由绘制。
+**TinyHand Linux** 是 TinyHand 的原生 Rust Wayland/Hyprland 移植版。演示时它会用卡通手替代鼠标指针，并支持在屏幕上自由绘制。
 
 ```bash
 git clone https://github.com/DuckB1t/tinyhand-linux.git
@@ -300,17 +305,9 @@ cd tinyhand-linux
 
 项目包含原始 36 款手部图像、15 种音效、墨迹绘制、工具栏、设置窗口，以及 `Ctrl+Alt+H/X/E/M/S` 快捷键。安装脚本**不会**修改 Hyprland 配置、不会启用开机自启，也不会添加按键绑定。
 
-致谢：TinyHand © 2026 Kamran Ahmed，MIT 许可。移植使用 Python、Cairo、pywayland、evdev、Pillow、NumPy 和 REA 完成。
+致谢：TinyHand © 2026 Kamran Ahmed，MIT 许可。移植使用 Rust、Cairo、wayland-client、evdev 和 REA 完成。
 
 </details>
-
----
-
-## 🔎 Search / SEO description
-
-**TinyHand Linux** is a free and open-source **Wayland presentation pointer**, **Hyprland cursor overlay**, and **screen drawing tool** written in Python with Cairo and pywayland. It uses the original TinyHand hand art and tap sounds, draws through a `zwlr_layer_shell_v1` overlay, and is built for developers, streamers, teachers, and anyone giving a presentation on Linux.
-
-**Tags:** `tinyhand linux`, `tinyhand wayland`, `hyprland pointer`, `wayland presentation tool`, `cairo overlay`, `pywayland layer shell`, `evdev pointer`, `screen drawing`, `screen annotation`, `presentation pointer`, `hyprland scripts`, `wlroots`, `python cairo`, `open source Linux app`
 
 ---
 
