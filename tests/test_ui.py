@@ -34,6 +34,25 @@ class TestUI(unittest.TestCase):
         self.ui.layout(app, 1920, 1080)
         self.assertIsNone(self.ui.hit(5, 5))
 
+    def test_settings_scroll_is_bounded(self):
+        self.ui.settings_open = True
+        self.ui.scroll_y = 100_000
+        app = SimpleNamespace(active=True, toolbar_visible=False)
+        self.ui.layout(app, 1920, 1080)
+        self.assertLessEqual(self.ui.scroll_y, self.ui._scroll_max)
+        tab = next(w for w in self.ui.widgets if w.id == "section:general")
+        self.assertIs(self.ui.hit(tab.x + tab.w / 2, tab.y + tab.h / 2), tab)
+
+    def test_picker_scroll_is_bounded(self):
+        self.ui.settings_open = True
+        self.ui.picker_open = True
+        self.ui.picker_scroll = 100_000
+        app = SimpleNamespace(active=True, toolbar_visible=False)
+        self.ui.layout(app, 1920, 1080)
+        self.assertLess(self.ui.picker_scroll, 200)
+        cell = next(w for w in self.ui.widgets if w.id.startswith("picker_style:"))
+        self.assertIs(self.ui.hit(cell.x + cell.w / 2, cell.y + cell.h / 2), cell)
+
 
 if __name__ == "__main__":
     unittest.main()

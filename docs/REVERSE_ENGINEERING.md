@@ -8,11 +8,11 @@ Source studied: `https://github.com/nilbuild/tinyhand.git`, commit `da98f98`
 
 1. Cloned the public source repository.
 2. Mapped all 22 Swift files under `Sources/TinyHand/`.
-3. Used REA's bundle/asset tooling on a reconstructed `.app` resource layout.
-   REA reported that Apple asset-catalog and plist inspection require a macOS
-   host (`assetutil`, native macOS plist provider), which is unavailable on
-   this Linux host. That limitation is recorded here rather than silently
-   ignored.
+3. Tried REA's bundle/asset tooling against a reconstructed `.app` resource
+   layout. REA reported that Apple asset-catalog and plist inspection require
+   a macOS host (`assetutil`, native macOS plist provider), which is
+   unavailable on this Linux host. That limitation is recorded here rather
+   than silently ignored.
 4. Used Pillow/NumPy to measure every shipped PNG pixel-by-pixel: alpha bounds,
    tip/wrist/rod centres, aspect ratios, and thumbnail crops. Results are in
    `docs/asset_reference.json` and `src/tinyhand_linux/assets/manifest.json`.

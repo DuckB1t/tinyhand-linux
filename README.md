@@ -29,7 +29,7 @@ maintainer's **Hyprland 0.57.2 / Tacit / Wayland** session (1920×1080, `eDP-1`)
 ## Install
 
 ```bash
-git clone <this-repo> tinyhand-linux
+git clone https://github.com/DuckB1t/tinyhand-linux.git
 cd tinyhand-linux
 ./install.sh
 ```
@@ -102,7 +102,7 @@ tinyhand://toggle                # URL handler, same command set
 
 ```bash
 make deps        # create .venv and install the package in editable mode
-make test        # 14 offline unit tests (prefs, assets, Cairo drawing, UI hit-testing)
+make test        # 16 offline unit tests (prefs, assets, Cairo drawing, UI hit-testing)
 make run         # start from the source tree
 ```
 

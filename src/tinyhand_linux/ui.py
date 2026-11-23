@@ -217,6 +217,7 @@ class UI:
     # ------------------------------------------------------------ settings UI
 
     def _layout_settings(self, app, width: int, height: int) -> None:
+        self.scroll_y = min(self.scroll_y, getattr(self, "_scroll_max", 0))
         sw, sh = 780, 560
         sx = (width - sw) / 2
         sy = (height - sh) / 2
@@ -246,12 +247,6 @@ class UI:
         page_w, page_h = sw - 210, sh - 48
         self.clip_rect = (page_x, page_y, page_w, page_h)
 
-        def page_add(wid, kind, rect, label="", value=None, data=None):
-            ry = rect[1] - self.scroll_y
-            if ry + rect[3] < page_y or ry > page_y + page_h:
-                return None
-            return self.add(wid, kind, (rect[0], ry, rect[2], rect[3]), label, value, data)
-
         title_x = page_x + 28
         title_y = page_y - self.scroll_y
         is_sub = self.settings_section == "make_hand"
@@ -261,7 +256,7 @@ class UI:
             else next((label for key, label, _, _ in sidebar_titles if key == self.settings_section), "General")
         )
         if is_sub:
-            page_add("back_pointers", "back", (title_x, title_y, 120, 24), "Pointers")
+            self.add("back_pointers", "back", (title_x, title_y, 120, 24), "Pointers")
             title_y += 30
         self.add(
             "page_title",
@@ -273,23 +268,24 @@ class UI:
         y = title_y + 46
 
         if self.settings_section == "general":
-            y = self._general_page(page_add, title_x, y, page_w - 56)
+            y = self._general_page(self.add, title_x, y, page_w - 56)
         elif self.settings_section == "pointers":
-            y = self._pointers_page(page_add, title_x, y, page_w - 56)
+            y = self._pointers_page(self.add, title_x, y, page_w - 56)
         elif self.settings_section == "make_hand":
-            y = self._make_hand_page(page_add, title_x, y, page_w - 56)
+            y = self._make_hand_page(self.add, title_x, y, page_w - 56)
         elif self.settings_section == "appearance":
-            y = self._appearance_page(page_add, title_x, y, page_w - 56)
+            y = self._appearance_page(self.add, title_x, y, page_w - 56)
         elif self.settings_section == "drawing":
-            y = self._drawing_page(page_add, title_x, y, page_w - 56)
+            y = self._drawing_page(self.add, title_x, y, page_w - 56)
         elif self.settings_section == "sound":
-            y = self._sound_page(page_add, title_x, y, page_w - 56)
+            y = self._sound_page(self.add, title_x, y, page_w - 56)
         elif self.settings_section == "about":
-            y = self._about_page(page_add, title_x, y, page_w - 56)
+            y = self._about_page(self.add, title_x, y, page_w - 56)
 
         # Scrolling is driven by the settings-section state; a full-page
         # hit-test widget would sit above every control and swallow clicks.
         self._scroll_max = max(0, y + self.scroll_y - (page_y + page_h) + 60)
+        self.scroll_y = min(self.scroll_y, self._scroll_max)
 
     def _card(self, add, x, y, w, title=None, rows=()):
         if title:
@@ -487,6 +483,10 @@ class UI:
         self.add("picker_bg", "card", (px, py, pw, ph), data={"picker": True})
         cell_w, cell_h = 64, 58
         cols = 5
+        rows = math.ceil(len(STYLES) / cols)
+        self.picker_scroll = min(
+            self.picker_scroll, max(0, 14 + rows * cell_h - (ph - 44))
+        )
         start_y = py + 14 - self.picker_scroll
         for index, style in enumerate(STYLES):
             col = index % cols
